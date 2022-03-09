@@ -1,2 +1,2 @@
-# web-programming-2020
+# Auctions.ba web
 https://auctions-ba.herokuapp.com/
