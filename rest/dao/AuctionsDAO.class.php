@@ -20,7 +20,7 @@ class AuctionsDAO
   }
 
   /**
-  * Method used to read all todo objects from database
+  * Method used to read all users objects from database
   */
   public function get_all()
   {
@@ -28,20 +28,30 @@ class AuctionsDAO
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-
   /**
-  * Method used to add todo to the database
+  * Method used to read users from database
   */
-  public function add($username, $firstname, $secondname, $email, $password)
+  public function get_by_id($id){
+    $stmt = $this->conn->prepare("SELECT * FROM todos WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return reset($result);
+  }
+  /**
+  * Method used to add user to the database
+  */
+  public function add($userdata)
   {
     $hashedpassword = password_hash($password, PASSWORD_ARGON2I);
     echo $hashedpassword;
     $stmt = $this->conn->prepare("INSERT INTO users (username, firstname, secondname, email, password) VALUES (:username, :firstname, :secondname, :email, :hashedpassword)");
-    $stmt->execute(['username' => $username, 'firstname' => $firstname, 'secondname' => $secondname, 'email' => $email, 'hashedpassword' => $hashedpassword]);
+    $stmt->execute($userdata);
+    $userdata['id'] = $this->conn->lastInsertId();
+    return $userdata;
   }
 
   /**
-  * Delete todo record from the database
+  * Delete user record from the database
   */
   public function delete($id)
   {
@@ -51,13 +61,14 @@ class AuctionsDAO
   }
 
   /**
-  * Update todo record
+  * Update user record
   */
-  public function update($id, $username, $firstname, $secondname, $email, $password)
+  public function update($userdata)
   {
     $hashedpassword = hash('sha256', $password, false);
     $stmt = $this->conn->prepare("UPDATE users SET username=:username, firstname=:firstname, secondname=:secondname, email=:email, hashedpassword=:hashedpassword   WHERE id=:id");
-    $stmt->execute(['id' => $id, 'username' => $username, 'firstname' => $firstname, 'secondname' => $secondname, 'email' => $email, 'hashedpassword' => $hashedpassword]);
+    $stmt->execute($userdata);
+    return $userdata;
   }
 
 }
