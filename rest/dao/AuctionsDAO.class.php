@@ -43,7 +43,6 @@ class AuctionsDAO
   public function add($userdata)
   {
     $hashedpassword = password_hash($password, PASSWORD_ARGON2I);
-    echo $hashedpassword;
     $stmt = $this->conn->prepare("INSERT INTO users (username, firstname, secondname, email, password) VALUES (:username, :firstname, :secondname, :email, :hashedpassword)");
     $stmt->execute($userdata);
     $userdata['id'] = $this->conn->lastInsertId();
