@@ -3,10 +3,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'dao/class AuctionsDAO.class.php';
+require_once 'dao/UserDao.class.php';
 require_once '../vendor/autoload.php';
 
-Flight::register('auctionsDAO', 'AuctionsDAO');
+Flight::register('userDao', 'UserDao');
 
 // CRUD operations for users entity
 
@@ -14,21 +14,21 @@ Flight::register('auctionsDAO', 'AuctionsDAO');
 * List all users
 */
 Flight::route('GET /users', function(){
-  Flight::json(Flight::auctionsDAO()->get_all());
+  Flight::json(Flight::userDAO()->get_all());
 });
 
 /**
 * List invidiual user
 */
 Flight::route('GET /user/@id', function($id){
-  Flight::json(Flight::auctionsDAO()->get_by_id($id));
+  Flight::json(Flight::userDAO()->get_by_id($id));
 });
 
 /**
 * add user
 */
 Flight::route('POST /user', function(){
-  Flight::json(Flight::auctionsDAO()->add(Flight::request()->data->getData()));
+  Flight::json(Flight::userDAO()->add(Flight::request()->data->getData()));
 });
 
 /**
@@ -37,14 +37,14 @@ Flight::route('POST /user', function(){
 Flight::route('PUT /user/@id', function($id){
   $data = Flight::request()->data->getData();
   $data['id'] = $id;
-  Flight::json(Flight::auctionsDAO()->update($data));
+  Flight::json(Flight::userDAO()->update($data));
 });
 
 /**
 * delete user
 */
 Flight::route('DELETE /user/@id', function($id){
-  Flight::auctionsDAO()->delete($id);
+  Flight::userDAO()->delete($id);
   Flight::json(["message" => "deleted"]);
 });
 

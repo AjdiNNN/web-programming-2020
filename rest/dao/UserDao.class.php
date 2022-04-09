@@ -1,6 +1,6 @@
 <?php
 
-class AuctionsDAO
+class UserDao
 {
 
   private $conn;
