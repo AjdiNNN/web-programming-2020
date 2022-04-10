@@ -14,21 +14,32 @@ Flight::register('userDao', 'UserDao');
 * List all users
 */
 Flight::route('GET /users', function(){
-  Flight::json(Flight::userDAO()->get_all());
+  Flight::json(Flight::userDao()->get_all());
 });
 
 /**
 * List invidiual user
 */
-Flight::route('GET /user/@id', function($id){
-  Flight::json(Flight::userDAO()->get_by_id($id));
+Flight::route('GET /user/@id', function($email){
+  Flight::json(Flight::userDao()->get_by_id($email));
 });
-
+/**
+* Check if email exists
+*/
+Flight::route('GET /user/email/@email', function($email){
+  Flight::json(Flight::userDao()->check_email($email));
+});
+/**
+* Check if username exists
+*/
+Flight::route('GET /user/@username', function($username){
+  Flight::json(Flight::userDao()->check_user($username));
+});
 /**
 * add user
 */
 Flight::route('POST /user', function(){
-  Flight::json(Flight::userDAO()->add(Flight::request()->data->getData()));
+  Flight::json(Flight::userDao()->add(Flight::request()->data->getData()));
 });
 
 /**
@@ -37,7 +48,7 @@ Flight::route('POST /user', function(){
 Flight::route('PUT /user/@id', function($id){
   $data = Flight::request()->data->getData();
   $data['id'] = $id;
-  Flight::json(Flight::userDAO()->update($data));
+  Flight::json(Flight::userDao()->update($data));
 });
 
 /**

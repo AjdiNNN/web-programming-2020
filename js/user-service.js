@@ -1,4 +1,5 @@
-var userService = {
+
+  var userService = {
     init: function(){
       $('#registerForm').validate({
         rules: {
@@ -19,6 +20,7 @@ var userService = {
             },
             email: {
                 required: true,
+                uniqueEmail: true
             },
             password: {
                 minlength: 6,
@@ -56,17 +58,18 @@ var userService = {
       })
     },
 
-    add: function(todo){
-      $.ajax({
-        url: 'rest/user',
-        type: 'POST',
-        data: JSON.stringify(todo),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(result) {
-            $("#register").modal("hide");
-        }
+    add: function(user){
+        $.ajax({
+          url: 'rest/user',
+          type: 'POST',
+          data: JSON.stringify(user),
+          contentType: "application/json",
+          dataType: "json",
+          success: function(result) {
+              $("#register").modal("hide");
+          }
       });
+      
     },
 
     update: function(){
@@ -103,3 +106,11 @@ var userService = {
       });
     },
 }
+$(document).ready(function(){
+  $.validator.addMethod('uniqueEmail', function (value, element) {
+    $.get('rest/user/email/'+value, function(data){
+      console.log(data);
+      return !data;
+    });
+  }, 'Email already registered!');
+});
