@@ -8,11 +8,9 @@ use Firebase\JWT\Key;
 
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/services/ItemService.class.php';
-//require_once __DIR__.'/services/TodoService.class.php';
 require_once __DIR__.'/dao/UserDao.class.php';
 
 Flight::register('userDao', 'UserDao');
-//Flight::register('todoService', 'TodoService');
 Flight::register('itemService', 'ItemService');
 
 Flight::map('error', function(Exception $ex){

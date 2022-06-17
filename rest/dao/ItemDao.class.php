@@ -37,6 +37,12 @@ class ItemDao extends BaseDao{
   public function get_by_id($id){
     return $this->query_unique('SELECT n.*, DATE_FORMAT(n.created, "%Y-%m-%d") created FROM items n WHERE n.id = :id', ['id' => $id]);
   }
+
+  public function get_all_sorted(){
+    return$this->query("SELECT * 
+    FROM `items` 
+    ORDER BY `ending` < NOW(), `ending` ASC",null);
+  }
 }
 
 ?>

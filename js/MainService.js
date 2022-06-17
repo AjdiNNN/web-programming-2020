@@ -72,7 +72,10 @@ var MainService = {
                 var toShow = "Ended";
                 var color = "";
                 if(diff<0)
+                {
                     toShow = toShow;
+                    color = "rgb(0, 0, 0)";
+                }
                 else if(diff>0)
                 {
                     toShow = diff+" days left";
@@ -127,7 +130,7 @@ var MainService = {
         },
          error: function(XMLHttpRequest, textStatus, errorThrown) {
            toastr.error(XMLHttpRequest.responseJSON.message);
-           userService.logout();
+           //userService.logout();
          }
       });
     },

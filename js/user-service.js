@@ -1,5 +1,7 @@
+
 var userService = {
   init: function(){
+    
     $('#registerForm').validate({
       rules: {
           username: {
@@ -57,7 +59,7 @@ var userService = {
         }
       },
       submitHandler: function(form) {
-        console.log("a");
+        
         var user = Object.fromEntries((new FormData(form)).entries());
         userService.auth(user);
       },
@@ -71,7 +73,6 @@ var userService = {
       contentType: "application/json",
       dataType: "json",
       success: function(result) {
-        console.log(result);
         localStorage.setItem("token", result.token);
         window.location.replace("index.html");
       },

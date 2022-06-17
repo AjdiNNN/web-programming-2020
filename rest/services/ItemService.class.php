@@ -17,6 +17,10 @@ class ItemService extends BaseService{
     return $this->dao->get_user_items($user['id'], $search);
   }
 
+  public function get_all_sorted(){
+    return $this->dao->get_all_sorted();
+  }
+
   public function add($user, $entity){
     $entity['user_id'] = $user['id'];
     return parent::add($user, $entity);

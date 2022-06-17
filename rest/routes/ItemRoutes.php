@@ -7,7 +7,7 @@
  * )
  */
 Flight::route('GET /items', function(){
-  Flight::json(Flight::itemService()->get_all());
+  Flight::json(Flight::itemService()->get_all_sorted());
 });
 
 /**
