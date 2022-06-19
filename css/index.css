@@ -1,5 +1,4 @@
 
-
 a,
 a:hover {
     text-decoration: none;
@@ -58,7 +57,7 @@ a:hover {
     background-size: cover;
 }
 
-.single-product .part-1 .discount,
+.discount,
 .single-product .part-1 .new {
     position: absolute;
     top: 15px;

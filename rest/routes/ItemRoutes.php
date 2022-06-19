@@ -16,20 +16,13 @@ Flight::route('GET /items', function(){
  *     @OA\Response(response="200", description="Fetch individual note")
  * )
  */
-Flight::route('GET /notes/@id', function($id){
-  Flight::json(Flight::noteService()->get_by_id(Flight::get('user'), $id));
+Flight::route('GET /items/@id', function($id){
+  Flight::json(Flight::itemService()->get_by_id(Flight::get('user'), $id));
 });
 
-/**
- * @OA\Get(path="/notes/{id}/todos", tags={"notes"}, security={{"ApiKeyAuth": {}}},
- *     @OA\Parameter(in="path", name="id", example=1, description="List todos"),
- *     @OA\Response(response="200", description="Fetch note's todos")
- * )
- */
-Flight::route('GET /notes/@id/todos', function($id){
-  Flight::json(Flight::todoService()->get_todos_by_note_id($id));
+Flight::route('GET /useritems', function(){
+  Flight::json(Flight::itemService()->get_user_items(Flight::get('user')));
 });
-
 /**
 * @OA\Post(
 *     path="/notes", security={{"ApiKeyAuth": {}}},
@@ -129,9 +122,4 @@ Flight::route('DELETE /notes/@id', function($id){
 *     )
 * )
 */
-Flight::route('POST /notes/@id/share', function($id){
-  $data = Flight::request()->data->getData();
-  Flight::json(Flight::noteService()->share(Flight::get('user'), $id, $data['email']));
-});
-
 ?>

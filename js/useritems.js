@@ -87,20 +87,19 @@ function modalEnding(){
               }
           }
 }
-var MainService = {
+var itemService = {
     init: function(){
-      MainService.list();
+        itemService.list();
     },
 
     list: function(){
       $.ajax({
-         url: "rest/items",
+         url: "rest/useritems",
          type: "GET",
          beforeSend: function(xhr){
            xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
          },
          success: function(data) {
-          console.log(data);
            $("#item-list").html("");
             var html = "";
             for(let i = 0; i < data.length; i++){

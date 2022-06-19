@@ -13,8 +13,8 @@ class ItemService extends BaseService{
     $this->user_dao = new UserDao();
   }
 
-  public function get_user_items($user, $search = NULL){
-    return $this->dao->get_user_items($user['id'], $search);
+  public function get_user_items($user){
+    return $this->dao->get_user_items($user['id']);
   }
 
   public function get_all_sorted(){
