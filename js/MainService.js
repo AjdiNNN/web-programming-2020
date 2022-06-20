@@ -70,41 +70,61 @@ setInterval(function () {
 }, 1000);
 
 function modalEnding(){
+  $.ajax({
+      url: 'rest/bids/'+$('#modalText').attr("value"),
+      type: "GET",
+    beforeSend: function(xhr){
+      xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+    },
+    success: function(data) {
+      $('#modalText').html("");
+      if (!$.trim(data)){   
+        $('#modalText').html("Bid 1BAM or more!");
+      }
+      else{   
+        $('#modalText').html("Bid "+(data[0].amount+1)+"BAM or more");
+      } 
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        toastr.error(XMLHttpRequest.responseJSON.message);
+        //userService.logout();
+    }
+  });
   var currentDate = new Date().getTime();
-          var endingDate = new Date( $('#modalDate').attr('datetime')).getTime();
-          var diff = Math.floor((endingDate - currentDate) / msDay);
-          if(diff<0)
+  var endingDate = new Date( $('#modalDate').attr('datetime')).getTime();
+  var diff = Math.floor((endingDate - currentDate) / msDay);
+  if(diff<0)
+  {
+      $('#modalDate').html("Ended");
+      $('#modalDate').css("background-color", "rgb(0, 0, 0)");
+  }
+  else if(diff>0)
+  {
+      $('#modalDate').html(diff+" days left");
+      $('#modalDate').css("background-color", "rgb(15, 99, 30)");
+  }
+  else
+  {
+      var hours = Math.floor(((endingDate - currentDate) % msDay) / msHours);
+      if(hours>0)
+      {
+          $('#modalDate').html(hours+" hours left");
+          $('#modalDate').css("background-color", "rgb(255,127,80)");
+      }
+      else
+      {
+          var mins = Math.floor(((endingDate - currentDate) % msDay) / msMinute);
+          if(mins>0)
           {
-              $('#modalDate').html("Ended");
-              $('#modalDate').css("background-color", "rgb(0, 0, 0)");
-          }
-          else if(diff>0)
-          {
-              $('#modalDate').html(diff+" days left");
-              $('#modalDate').css("background-color", "rgb(15, 99, 30)");
+              $('#modalDate').html(mins+" minutes left");
           }
           else
           {
-              var hours = Math.floor(((endingDate - currentDate) % msDay) / msHours);
-              if(hours>0)
-              {
-                  $('#modalDate').html(hours+" hours left");
-                  $('#modalDate').css("background-color", "rgb(255,127,80)");
-              }
-              else
-              {
-                  var mins = Math.floor(((endingDate - currentDate) % msDay) / msMinute);
-                  if(mins>0)
-                  {
-                      $('#modalDate').html(mins+" minutes left");
-                  }
-                  else
-                  {
-                      var seconds = Math.floor(((endingDate - currentDate) % 60000) / 1000);
-                      $('#modalDate').html(seconds+" seconds left");
-                  }
-              }
+              var seconds = Math.floor(((endingDate - currentDate) % 60000) / 1000);
+              $('#modalDate').html(seconds+" seconds left");
           }
+      }
+  }
 }
 var MainService = {
     init: function(){
@@ -161,7 +181,7 @@ var MainService = {
                     }
                 }
                 html += `
-                <div class="col-md-6 col-lg-4 col-xl-3" data-toggle="modal" data-target="#exampleModalCenter" onclick="itemService.get(`+data[i].id+`)">
+                <div class="col-md-6 col-lg-4 col-xl-3" data-toggle="modal" data-target="#exampleModalCenter" onclick="MainService.get(`+data[i].id+`)">
                 <div id="product-2" class="single-product">
                         <div class="part-1" id="itemImage`+itemNo+`">
                         <style>
@@ -202,6 +222,7 @@ var MainService = {
          success: function(data) {
           $('#dataTitle').html(data.title);
           $('#modalDate').attr("dateTime", data.ending);
+          $('#modalText').attr("value", data.id);
           modalEnding();
           setInterval(function () {
             modalEnding();

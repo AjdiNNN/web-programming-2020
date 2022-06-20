@@ -40,6 +40,11 @@
         <li class="nav-item">
           <a class="nav-link text-dark" href="#">My items</a>
         </li>
+        <li>
+          <button type="button" class="btn btn-primary me-3" onclick="itemService.add()">
+            Add Item
+          </button>
+        </li>
       </ul>
       <!-- Left links -->
 
@@ -72,21 +77,23 @@
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/jquery.validate.min.js"></script>
-
+<script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="js/useritems.js"></script>
 <script src="js/user-service.js"></script>
 
 
+
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content rounded-0">
+    <div class="modal-content rounded-0" style="min-height: 300px;">
       <div class="modal-body py-0">
 
         
         <div class="d-flex main-content">
-          <div class="bg-image promo-img mr-3 w-100" id="dataImage" style=" background-size: cover; background-repeat: no-repeat; background-position: center; ">
+          <div class="bg-image promo-img mr-3 w-100" id="dataImage" style=" background-size: cover; background-repeat: no-repeat; background-position: center; min-height: 300px;">
             <span class="discount" id="modalDate" datetime=""></span>
           </div>
           <div class="content-text p-4 px-5 align-item-stretch w-75">
@@ -98,18 +105,9 @@
 
                 </p>
 
-                <p class="mb-5" id="dataDescription">All their equipment and instruments are alive. The sky was this is cloudless and of a deep dark blue. A shining crescent far beneath the flying vessel.</p>
-                <div class="d-flex w-100">
-                  <form class="form-inline">
-                    <label class="sr-only" for="bidAmount">Bid</label>
-                    <div class="input-group mb-2 mr-sm-2">
-
-                      <span class="icon-money d-flex align-items-center"></span>
-                        
-                      <input type="text" class="form-control mb-2 mx-1" id="bidAmount" placeholder="Username">
-
-                      <button type="submit" class="btn btn-primary mb-2">Submit</button>
-                  </form>
+                <p class="mb-3" id="dataDescription">All their equipment and instruments are alive. The sky was this is cloudless and of a deep dark blue. A shining crescent far beneath the flying vessel.</p>
+                <div class="sr-only" id="modalText" value="-1">
+                  <div class="spinner-border" role="status"></div>
                 </div>
             </div>
           </div>
@@ -119,8 +117,42 @@
     </div>
   </div>
 </div>
-
-
+<!-- Modal -->
+<div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="addItemModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add item to auction</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="itemadd">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Title:</label>
+            <input type="text" class="form-control" id="recipient-name" name="title">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Description:</label>
+            <textarea class="form-control" id="message-text" name="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="image" class="col-form-label">Image:</label>
+            <input class="form-control" type="file" id="imageInput" accept="image/*" name="imageInput">
+          </div>
+          <div class="form-group">
+            <label for="image" class="col-form-label">Ending date:</label>
+            <input  class="form-control" type="datetime-local" id="start" name="endingDate" name="date">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-lg btn-primary" id="submit" type="submit" name="submiter">Add item</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   var token = localStorage.getItem("token");

@@ -1,114 +1,46 @@
-var itemNo = 0;
-var msDay = 60*60*24*1000;
-var msHours = 60*60*1000;
-var msMinute = 60*1000;
-function checkItems()
-{
-    for(let i = 0; i <itemNo; i++)
-    {
-        $.ajax({
-            url: 'rest/bids/'+$('#highestBid'+i).attr("value"),
-            type: "GET",
-          beforeSend: function(xhr){
-            xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-          },
-          success: function(data) {
-            if (!$.trim(data)){   
-              $('#highestBid'+i).html("No bids!");
-            }
-            else{   
-                $('#highestBid'+i).html("Current highest bid "+data[0].amount+"BAM");
-            } 
-          },
-          error: function(XMLHttpRequest, textStatus, errorThrown) {
-              toastr.error(XMLHttpRequest.responseJSON.message);
-              //userService.logout();
-          }
-        });
-        var currentDate = new Date().getTime();
-        var endingDate = new Date($("#date"+i).attr('datetime')).getTime();
-        var diff = Math.floor((endingDate - currentDate) / msDay);
-        if(diff<0)
-        {
-            $("#date"+i).html("Ended");
-            continue;
-        }
-        else if(diff>0)
-        {
-            $("#date"+i).html(diff+" days left");
-            $("#date"+i).css("background-color", "rgb(15, 99, 30)");
-            continue;
-        }
-        else
-        {
-            var hours = Math.floor(((endingDate - currentDate) % msDay) / msHours);
-            if(hours>0)
-            {
-                $("#date"+i).html(hours+" hours left");
-                $("#date"+i).css("background-color", "rgb(255,127,80)");
-                continue;
-            }
-            else
-            {
-                var mins = Math.floor(((endingDate - currentDate) % msDay) / msMinute);
-                if(mins>0)
-                {
-                    $("#date"+i).html(mins+" minutes left");
-                    continue;
-                }
-                else
-                {
-                    var seconds = Math.floor(((endingDate - currentDate) % 60000) / 1000);
-                    $("#date"+i).html(seconds+" seconds left");
-                }
-            }
-        }
-    }
-}
-setInterval(function () {
-  checkItems();
-}, 1000);
-
-function modalEnding(){
-  var currentDate = new Date().getTime();
-          var endingDate = new Date( $('#modalDate').attr('datetime')).getTime();
-          var diff = Math.floor((endingDate - currentDate) / msDay);
-          if(diff<0)
-          {
-              $('#modalDate').html("Ended");
-              $('#modalDate').css("background-color", "rgb(0, 0, 0)");
-          }
-          else if(diff>0)
-          {
-              $('#modalDate').html(diff+" days left");
-              $('#modalDate').css("background-color", "rgb(15, 99, 30)");
-          }
-          else
-          {
-              var hours = Math.floor(((endingDate - currentDate) % msDay) / msHours);
-              if(hours>0)
-              {
-                  $('#modalDate').html(hours+" hours left");
-                  $('#modalDate').css("background-color", "rgb(255,127,80)");
-              }
-              else
-              {
-                  var mins = Math.floor(((endingDate - currentDate) % msDay) / msMinute);
-                  if(mins>0)
-                  {
-                      $('#modalDate').html(mins+" minutes left");
-                  }
-                  else
-                  {
-                      var seconds = Math.floor(((endingDate - currentDate) % 60000) / 1000);
-                      $('#modalDate').html(seconds+" seconds left");
-                  }
-              }
-          }
-}
 var itemService = {
     init: function(){
-        itemService.list();
+      itemService.list();
+      $('#itemadd').validate({ 
+        rules:{
+          title: {
+            required:true
+            },
+          description: {
+              minlength: 30,
+              maxlength: 255,
+              required: true
+          },
+          date: {
+            required: true,
+            dateISO: true
+          },
+          imageInput: {
+            required: true,
+            accept: "image/*"
+          }
+        },
+        messages:
+        {
+          imageInput: "Only images are accepted",
+        },
+        errorPlacement: function ( error, element ) {
+          error.addClass( "invalid-feedback" );
+          error.insertAfter( element );
+      },
+        highlight: function(element) {
+            $(element).removeClass('is-valid').addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+        },
+
+        submitHandler: function(form) {
+          
+          var item =new FormData(form);
+          itemService.addItem(item);
+        },
+      });
     },
 
     list: function(){
@@ -200,6 +132,7 @@ var itemService = {
          success: function(data) {
           $('#dataTitle').html(data.title);
           $('#modalDate').attr("dateTime", data.ending);
+          $('#modalText').attr("value", data.id);
           modalEnding();
           setInterval(function () {
             modalEnding();
@@ -213,24 +146,24 @@ var itemService = {
            $('.note-button').attr('disabled', false);
          }});
     },
-
-    add: function(note){
+    addItem: function(note){
       $.ajax({
-        url: 'rest/notes',
+        url: 'rest/item',
         type: 'POST',
         beforeSend: function(xhr){
           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
         },
-        data: JSON.stringify(note),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(result) {
-            $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-            MainService.list(); // perf optimization
-            $("#addNoteModal").modal("hide");
-            toastr.success("Note added!");
-        }
+        data: note,
+        success: function (msg) {
+          
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
       });
+    },
+    add: function(){
+      $("#addItemModal").modal("show");
     },
 
     update: function(id, entity){
@@ -268,35 +201,137 @@ var itemService = {
       });
     },
 
-    choose_color: function(color){
-      $('#addNoteForm input[name="color"]').val(color);
-    },
-
-    share: function(id){
-      $('#shareNoteForm input[name="note_id"]').val(id);
-      $('#shareModal').modal('show');
-    },
-
     share_note : function(){
-      var note_id = $('#shareNoteForm input[name="note_id"]').val();
-      var recipient = $('#shareNoteForm input[name="recipient"]').val();
-
-      $.ajax({
-        url: 'rest/notes/'+note_id+'/share',
-        type: 'POST',
-        beforeSend: function(xhr){
-          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-        },
-        data: JSON.stringify({email: recipient}),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(result) {
-            $("#shareModal").modal("hide");
-            toastr.success("Note shared!");
-        }
-      });
 
     }
 
 
 };
+var itemNo = 0;
+var msDay = 60*60*24*1000;
+var msHours = 60*60*1000;
+var msMinute = 60*1000;
+function checkItems()
+{
+    for(let i = 0; i <itemNo; i++)
+    {
+        $.ajax({
+            url: 'rest/bids/'+$('#highestBid'+i).attr("value"),
+            type: "GET",
+          beforeSend: function(xhr){
+            xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+          },
+          success: function(data) {
+            if (!$.trim(data)){   
+              $('#highestBid'+i).html("No bids!");
+            }
+            else{   
+                $('#highestBid'+i).html("Current highest bid "+data[0].amount+"BAM");
+            } 
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+              toastr.error(XMLHttpRequest.responseJSON.message);
+              //userService.logout();
+          }
+        });
+        var currentDate = new Date().getTime();
+        var endingDate = new Date($("#date"+i).attr('datetime')).getTime();
+        var diff = Math.floor((endingDate - currentDate) / msDay);
+        if(diff<0)
+        {
+            $("#date"+i).html("Ended");
+            continue;
+        }
+        else if(diff>0)
+        {
+            $("#date"+i).html(diff+" days left");
+            $("#date"+i).css("background-color", "rgb(15, 99, 30)");
+            continue;
+        }
+        else
+        {
+            var hours = Math.floor(((endingDate - currentDate) % msDay) / msHours);
+            if(hours>0)
+            {
+                $("#date"+i).html(hours+" hours left");
+                $("#date"+i).css("background-color", "rgb(255,127,80)");
+                continue;
+            }
+            else
+            {
+                var mins = Math.floor(((endingDate - currentDate) % msDay) / msMinute);
+                if(mins>0)
+                {
+                    $("#date"+i).html(mins+" minutes left");
+                    continue;
+                }
+                else
+                {
+                    var seconds = Math.floor(((endingDate - currentDate) % 60000) / 1000);
+                    $("#date"+i).html(seconds+" seconds left");
+                }
+            }
+        }
+    }
+}
+setInterval(function () {
+  checkItems();
+}, 1000);
+
+function modalEnding(){
+  $.ajax({
+      url: 'rest/bids/'+$('#modalText').attr("value"),
+      type: "GET",
+    beforeSend: function(xhr){
+      xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+    },
+    success: function(data) {
+      $('#modalText').html("");
+      if (!$.trim(data)){   
+        $('#modalText').html("No bids!");
+      }
+      else{   
+        $('#modalText').html("Current highest bid "+data[0].amount+"BAM");
+      } 
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        toastr.error(XMLHttpRequest.responseJSON.message);
+        //userService.logout();
+    }
+  });
+  var currentDate = new Date().getTime();
+  var endingDate = new Date( $('#modalDate').attr('datetime')).getTime();
+  var diff = Math.floor((endingDate - currentDate) / msDay);
+  if(diff<0)
+  {
+      $('#modalDate').html("Ended");
+      $('#modalDate').css("background-color", "rgb(0, 0, 0)");
+  }
+  else if(diff>0)
+  {
+      $('#modalDate').html(diff+" days left");
+      $('#modalDate').css("background-color", "rgb(15, 99, 30)");
+  }
+  else
+  {
+      var hours = Math.floor(((endingDate - currentDate) % msDay) / msHours);
+      if(hours>0)
+      {
+          $('#modalDate').html(hours+" hours left");
+          $('#modalDate').css("background-color", "rgb(255,127,80)");
+      }
+      else
+      {
+          var mins = Math.floor(((endingDate - currentDate) % msDay) / msMinute);
+          if(mins>0)
+          {
+              $('#modalDate').html(mins+" minutes left");
+          }
+          else
+          {
+              var seconds = Math.floor(((endingDate - currentDate) % 60000) / 1000);
+              $('#modalDate').html(seconds+" seconds left");
+          }
+      }
+  }
+}

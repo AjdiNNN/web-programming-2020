@@ -46,8 +46,55 @@ Flight::route('GET /useritems', function(){
 *     )
 * )
 */
-Flight::route('POST /notes', function(){
-  Flight::json(Flight::noteService()->add(Flight::get('user'), Flight::request()->data->getData()));
+Flight::route('POST /item', function(){
+  $request = Flight::request();
+  $file = $request->files['imageInput'];
+  $target_dir = "../img/items/";
+  $target_file = $file['name'];
+  $uploadOk = 1;
+  $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+  // Check if image file is a actual image or fake image
+  $check = getimagesize($file["tmp_name"]);
+  if($check !== false) {
+    echo "File is an image - " . $check["mime"] . ".";
+    $uploadOk = 1;
+  } else {
+    echo "File is not an image.";
+    $uploadOk = 0;
+  }
+  clearstatcache();
+  // Check if file already exists
+  //var_dump($target_file);
+  if (file_exists($target_file)) {
+    echo "Sorry, file already exists.";
+    $uploadOk = 0;
+  }
+  
+  // Check file size
+  if ($file["size"] > 500000) {
+    echo "Sorry, your file is too large.";
+    $uploadOk = 0;
+  }
+  
+  // Allow certain file formats
+  if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+  && $imageFileType != "gif" ) {
+    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    $uploadOk = 0;
+  }
+  
+  // Check if $uploadOk is set to 0 by an error
+  if ($uploadOk == 0) {
+    echo "Sorry, your file was not uploaded.";
+  // if everything is ok, try to upload file
+  } else {
+    if (move_uploaded_file($file["tmp_name"], $target_dir.$target_file)) {
+      echo "The file ". htmlspecialchars( basename($file["name"])). " has been uploaded.";
+    } else {
+      echo "Sorry, there was an error uploading your file.";
+    }
+  }
+  //Flight::json(Flight::noteService()->add(Flight::get('user'), Flight::request()->data->getData()));
 });
 
 /**
@@ -75,7 +122,7 @@ Flight::route('POST /notes', function(){
 * )
 */
 Flight::route('PUT /notes/@id', function($id){
-  $data = Flight::request()->data->getData();
+  
   Flight::json(Flight::noteService()->update(Flight::get('user'), $id, $data));
 });
 
@@ -122,4 +169,16 @@ Flight::route('DELETE /notes/@id', function($id){
 *     )
 * )
 */
+function wh_log($log_msg)
+{
+    $log_filename = "log";
+    if (!file_exists($log_filename)) 
+    {
+        // create directory/folder uploads.
+        mkdir($log_filename, 0777, true);
+    }
+    $log_file_data = $log_filename.'/log_' . date('d-M-Y') . '.log';
+    // if you don't add `FILE_APPEND`, the file will be erased each time you add a log
+    file_put_contents($log_file_data, $log_msg . "\n", FILE_APPEND);
+} 
 ?>

@@ -47,7 +47,7 @@ var userService = {
             userService.add(user);
           }
     });
-    $('#signinForm').validate({ 
+  $('#signinForm').validate({ 
       rules:{
         email: {
           email:true
