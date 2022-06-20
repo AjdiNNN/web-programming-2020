@@ -6,6 +6,25 @@ function checkEndings()
 {
     for(let i = 0; i <itemNo; i++)
     {
+        $.ajax({
+            url: 'rest/bids/'+$('#highestBid'+i).attr("value"),
+            type: "GET",
+          beforeSend: function(xhr){
+            xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+          },
+          success: function(data) {
+            if (!$.trim(data)){   
+              $('#highestBid'+i).html("No bids!");
+            }
+            else{   
+                $('#highestBid'+i).html("Current highest bid "+data[0].amount+"BAM");
+            } 
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+              toastr.error(XMLHttpRequest.responseJSON.message);
+              //userService.logout();
+          }
+        });
         var currentDate = new Date().getTime();
         var endingDate = new Date($("#date"+i).attr('datetime')).getTime();
         var diff = Math.floor((endingDate - currentDate) / msDay);
@@ -142,7 +161,7 @@ var MainService = {
                     }
                 }
                 html += `
-                <div class="col-md-6 col-lg-4 col-xl-3" data-toggle="modal" data-target="#exampleModalCenter" onclick="MainService.get(`+data[i].id+`)">
+                <div class="col-md-6 col-lg-4 col-xl-3" data-toggle="modal" data-target="#exampleModalCenter" onclick="itemService.get(`+data[i].id+`)">
                 <div id="product-2" class="single-product">
                         <div class="part-1" id="itemImage`+itemNo+`">
                         <style>
@@ -156,7 +175,7 @@ var MainService = {
                         </div>
                         <div class="part-2">
                                 <h3 class="product-title">`+data[i].title+`</h3>
-                                <h4 class="product-price">Current highest bid 200 BAM</h4>
+                                <h4 class="product-price" id="highestBid`+itemNo+`" value="`+data[i].id+`"><div class="spinner-border" role="status"></div></h4>
                         </div>
                     </div>
                 </div>

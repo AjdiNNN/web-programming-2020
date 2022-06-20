@@ -8,10 +8,12 @@ use Firebase\JWT\Key;
 
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/services/ItemService.class.php';
+require_once __DIR__.'/services/BidService.class.php';
 require_once __DIR__.'/dao/UserDao.class.php';
 
 Flight::register('userDao', 'UserDao');
 Flight::register('itemService', 'ItemService');
+Flight::register('bidService', 'BidService');
 
 Flight::map('error', function(Exception $ex){
     // Handle error
@@ -59,6 +61,7 @@ Flight::route('GET /docs.json', function(){
 //require_once __DIR__.'/routes/TodoRoutes.php';
 require_once __DIR__.'/routes/ItemRoutes.php';
 require_once __DIR__.'/routes/UserRoutes.php';
+require_once __DIR__.'/routes/BidRoutes.php';
 
 Flight::start();
 ?>
