@@ -155,7 +155,8 @@ var itemService = {
         },
         data: note,
         success: function (msg) {
-          
+          alert(msg);
+          console.log(msg);
         },
         cache: false,
         processData: false,
