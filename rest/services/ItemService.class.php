@@ -23,7 +23,6 @@ class ItemService extends BaseService{
 
   public function add($user, $entity){
     $entity['owner_id'] = $user['id'];
-    //return $entity;
     return parent::add($user, $entity);
   }
 

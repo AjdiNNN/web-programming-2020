@@ -19,7 +19,7 @@ class BidService extends BaseService{
 
 
   public function add($user, $entity){
-    $entity['user_id'] = $user['id'];
+    $entity['bidder_id'] = $user['id'];
     return parent::add($user, $entity);
   }
 }

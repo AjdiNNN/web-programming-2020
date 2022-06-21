@@ -11,7 +11,7 @@ class BidDao extends BaseDao{
   }
 
   public function get_item_bids($item_id){
-    return $this->query("SELECT * FROM bids WHERE item_id = :item_id ORDER BY `amount`", ['item_id' => $item_id]);
+    return $this->query("SELECT * FROM bids WHERE item_id = :item_id ORDER BY `amount` DESC", ['item_id' => $item_id]);
   }
 }
 ?>

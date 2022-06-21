@@ -89,7 +89,7 @@
           </div>
           <div class="content-text p-4 px-5 align-item-stretch w-75">
             <div class="text-center">
-                <a onclick="$('#exampleModalCenter').modal('hide')" class="share"><span class="icon-reply"></span></a>
+                <a onclick="$('#exampleModalCenter').modal('hide');" class="share"><span class="icon-reply"></span></a>
                 <h3 class="mb-3 line" id="dataTitle">Grand Prix 4000</h3>
                 <p class="mb-3">
                     <span class="icon-info"></span>
@@ -98,7 +98,7 @@
 
                 <p class="mb-5" id="dataDescription">All their equipment and instruments are alive. The sky was this is cloudless and of a deep dark blue. A shining crescent far beneath the flying vessel.</p>
                 <div class="d-flex w-100">
-                  <form class="form-inline">
+                  <form class="form-inline" id="bidform">
                     <div class="sr-only" id="modalText" value="-1">
                       <div class="spinner-border" role="status">
                       </div>
@@ -106,9 +106,9 @@
                     
                     <div class="input-group mb-2 mr-sm-2">
 
-                      <span class="icon-money d-flex align-items-center"></span>
+                      <span class="icon-money d-flex align-items-center" id="money" style="margin-top:-0.5rem"></span>
                         
-                      <input type="text" class="form-control mb-2 mx-1" id="bidAmount" placeholder="Username">
+                      <input type="text" name="amount" class="form-control mb-2 mx-1" id="bidAmount" placeholder="Enter bid amount">
 
                       <button type="submit" class="btn btn-primary mb-2">Submit</button>
                   </form>

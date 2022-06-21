@@ -2,6 +2,7 @@ var itemNo = 0;
 var msDay = 60*60*24*1000;
 var msHours = 60*60*1000;
 var msMinute = 60*1000;
+var currentMinbid = 1;
 function checkEndings()
 {
     for(let i = 0; i <itemNo; i++)
@@ -80,10 +81,13 @@ function modalEnding(){
       $('#modalText').html("");
       if (!$.trim(data)){   
         $('#modalText').html("Bid 1BAM or more!");
+        currentMinbid = 1;
       }
       else{   
+        currentMinbid = data[0].amount+1;
         $('#modalText').html("Bid "+(data[0].amount+1)+"BAM or more");
       } 
+      $('#bidform').validate();
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
         toastr.error(XMLHttpRequest.responseJSON.message);
@@ -129,6 +133,35 @@ function modalEnding(){
 var MainService = {
     init: function(){
       MainService.list();
+      $('#bidform').validate({ 
+        rules:{
+          bid: {
+              required:true,
+              min:  function ()  { return  currentMinbid; }
+            },
+        },
+        messages:
+        {
+          imageInput: "Only images are accepted",
+        },
+        errorPlacement: function ( error, element ) {
+      },
+        highlight: function(element) {
+            $(element).removeClass('is-valid').addClass('is-invalid');
+            $('#modalText').css("color","red")
+            $('#money').css("color","red")
+        },
+        unhighlight: function(element) {
+            $(element).removeClass('is-invalid').addClass('is-valid');
+            $('#modalText').css("color","green")
+            $('#money').css("color","green")
+        },
+        submitHandler: function(form) {
+          
+          var bid = Object.fromEntries((new FormData(form)).entries());
+          MainService.addBid(bid);
+        },
+      });
     },
 
     list: function(){
@@ -139,7 +172,6 @@ var MainService = {
            xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
          },
          success: function(data) {
-          console.log(data);
            $("#item-list").html("");
             var html = "";
             for(let i = 0; i < data.length; i++){
@@ -237,89 +269,21 @@ var MainService = {
          }});
     },
 
-    add: function(note){
+    addBid : function(data){
+      var itemid = $('#modalText').attr("value");
+      data['item_id'] = itemid;
       $.ajax({
-        url: 'rest/notes',
+        url: 'rest/bid',
         type: 'POST',
         beforeSend: function(xhr){
           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
         },
-        data: JSON.stringify(note),
+        data: JSON.stringify(data),
         contentType: "application/json",
         dataType: "json",
         success: function(result) {
-            $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-            MainService.list(); // perf optimization
-            $("#addNoteModal").modal("hide");
-            toastr.success("Note added!");
+            //toastr.success("Note shared!");
         }
       });
-    },
-
-    update: function(id, entity){
-      $.ajax({
-        url: 'rest/notes/'+id,
-        type: 'PUT',
-        beforeSend: function(xhr){
-          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-        },
-        data: JSON.stringify(entity),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(result) {
-            $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-            MainService.list(); // perf optimization
-            $("#addNoteModal").modal("hide");
-            toastr.success("Note updated!");
-        }
-      });
-    },
-
-    delete: function(id){
-      $('.note-button').attr('disabled', true);
-      $.ajax({
-        url: 'rest/notes/'+id,
-        beforeSend: function(xhr){
-          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-        },
-        type: 'DELETE',
-        success: function(result) {
-            $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-            MainService.list();
-            toastr.success("Note deleted!");
-        }
-      });
-    },
-
-    choose_color: function(color){
-      $('#addNoteForm input[name="color"]').val(color);
-    },
-
-    share: function(id){
-      $('#shareNoteForm input[name="note_id"]').val(id);
-      $('#shareModal').modal('show');
-    },
-
-    share_note : function(){
-      var note_id = $('#shareNoteForm input[name="note_id"]').val();
-      var recipient = $('#shareNoteForm input[name="recipient"]').val();
-
-      $.ajax({
-        url: 'rest/notes/'+note_id+'/share',
-        type: 'POST',
-        beforeSend: function(xhr){
-          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-        },
-        data: JSON.stringify({email: recipient}),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(result) {
-            $("#shareModal").modal("hide");
-            toastr.success("Note shared!");
-        }
-      });
-
     }
-
-
 };
