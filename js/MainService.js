@@ -329,9 +329,7 @@ var MainService = {
         contentType: "application/json",
         dataType: "json",
         success: function(result) {
-            alert(result);
-            console.log(result);
-            //toastr.success("Note shared!");
+          toastr.success("Bid succesful");
         }
       });
     }

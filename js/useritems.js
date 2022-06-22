@@ -154,9 +154,10 @@ var itemService = {
           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
         },
         data: note,
-        success: function (msg) {
-          alert(msg);
-          console.log(msg);
+        success: function () {
+          itemService.list();
+          $('#addItemModal').modal("hide");
+          toastr.success("Item added");
         },
         cache: false,
         processData: false,
