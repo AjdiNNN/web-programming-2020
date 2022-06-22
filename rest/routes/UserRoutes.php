@@ -24,6 +24,10 @@ Flight::route('POST /register', function(){
   Flight::json(["message" => "Success"]);
 });
 
+Flight::route('GET /user', function(){
+  Flight::json(Flight::get('user')['id']);
+});
+
 Flight::route('GET /email/@email', function($email){
   Flight::json(Flight::userService()->get_user_by_email($email));
 });

@@ -20,7 +20,7 @@ class UserDao extends BaseDao
     $email = strtolower($userdata['email']);
     $hashedpassword = password_hash($userdata['password'], PASSWORD_ARGON2I);
     $this->query_unique("INSERT INTO users (username, firstname, secondname, email, password) VALUES (:username, :fname, :sname, :email, :hashedpassword)", 
-                                                                      ['email' => $email, 'username' => $username, 'fname' => $fname, 'sname' => $sname,'hashedpassword'=>$hashedpassword]);
+                                                               ['email' => $email, 'username' => $username, 'fname' => $fname, 'sname' => $sname,'hashedpassword'=>$hashedpassword]);
   }
   public function get_user_by_username($username){
     return $this->query_unique("SELECT * FROM users WHERE username = :username", ['username' => $username]);

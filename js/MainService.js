@@ -18,7 +18,7 @@ function checkEndings()
               $('#highestBid'+i).html("No bids!");
             }
             else{   
-                $('#highestBid'+i).html("Current highest bid "+data[0].amount+"BAM");
+                $('#highestBid'+i).html("Highest bid "+data[0].amount+"BAM");
             } 
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -66,41 +66,18 @@ function checkEndings()
         }
     }
 }
-setInterval(function () {
-   checkEndings();
-}, 1000);
-
-function modalEnding(){
-  $.ajax({
-      url: 'rest/bids/'+$('#modalText').attr("value"),
-      type: "GET",
-    beforeSend: function(xhr){
-      xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-    },
-    success: function(data) {
-      $('#modalText').html("");
-      if (!$.trim(data)){   
-        $('#modalText').html("Bid 1BAM or more!");
-        currentMinbid = 1;
-      }
-      else{   
-        currentMinbid = data[0].amount+1;
-        $('#modalText').html("Bid "+(data[0].amount+1)+"BAM or more");
-      } 
-      $('#bidform').validate();
-    },
-    error: function(XMLHttpRequest, textStatus, errorThrown) {
-        toastr.error(XMLHttpRequest.responseJSON.message);
-        //userService.logout();
-    }
-  });
+function modalEnding(useritem){
   var currentDate = new Date().getTime();
   var endingDate = new Date( $('#modalDate').attr('datetime')).getTime();
   var diff = Math.floor((endingDate - currentDate) / msDay);
+  if(!useritem){
+    $('#bid').css("display","flex");
+  }
   if(diff<0)
   {
       $('#modalDate').html("Ended");
       $('#modalDate').css("background-color", "rgb(0, 0, 0)");
+      $('#bid').css("display","none");
   }
   else if(diff>0)
   {
@@ -129,20 +106,69 @@ function modalEnding(){
           }
       }
   }
+  $.ajax({
+    url: 'rest/bids/'+$('#modalText').attr("value"),
+    type: "GET",
+  beforeSend: function(xhr){
+    xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+  },
+  success: function(data) {
+    $('#modalText').html("");
+    if(diff>=0)
+    {
+      if (!$.trim(data)){
+        if(!useritem){
+          $('#modalText').html("Bid 1BAM or more!");
+          currentMinbid = 1;
+        }
+        else
+        {
+          $('#modalText').html("No bids!");
+        }
+      }
+      else{   
+        if(!useritem){
+          currentMinbid = data[0].amount+1;
+          $('#modalText').html("Bid "+(data[0].amount+1)+"BAM or more");
+        }
+        else
+        {
+          $('#modalText').html("Current bid "+(data[0].amount+1)+"BAM");
+        }
+      } 
+    }
+    else
+    {
+      if (!$.trim(data)){
+        $('#modalText').html("No bids!");
+      }
+      else{   
+        $('#modalText').html("Higest bid "+(data[0].amount+1)+"BAM");
+      } 
+    }
+  },
+  error: function(XMLHttpRequest, textStatus, errorThrown) {
+      toastr.error(XMLHttpRequest.responseJSON.message);
+      //userService.logout();
+  }
+});
 }
 var MainService = {
     init: function(){
       MainService.list();
+      setInterval(function () {
+        checkEndings();
+     }, 1000);
+     
+      $('#exampleModalCenter').on('hidden.bs.modal', function(e) {
+        $('#modalText').css("color","black")
+      });
       $('#bidform').validate({ 
         rules:{
-          bid: {
+          amount: {
               required:true,
               min:  function ()  { return  currentMinbid; }
             },
-        },
-        messages:
-        {
-          imageInput: "Only images are accepted",
         },
         errorPlacement: function ( error, element ) {
       },
@@ -246,27 +272,48 @@ var MainService = {
 
     get: function(id){
       $.ajax({
-         url: 'rest/items/'+id,
-         type: "GET",
-         beforeSend: function(xhr){
-           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-         },
-         success: function(data) {
-          $('#dataTitle').html(data.title);
-          $('#modalDate').attr("dateTime", data.ending);
-          $('#modalText').attr("value", data.id);
-          modalEnding();
-          setInterval(function () {
-            modalEnding();
-          }, 1000);    
-          $('#dataImage').css("background-image","url('img/items/"+data.image+"')");
-          $('#dataDescription').html(data.description);
-          $('#exampleModalCenter').modal("show");
-         },
-         error: function(XMLHttpRequest, textStatus, errorThrown) {
-           toastr.error(XMLHttpRequest.responseJSON.message);
-           $('.note-button').attr('disabled', false);
-         }});
+        url: 'rest/user',
+        type: "GET",
+        beforeSend: function(xhr){
+          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+        },
+        success: function(testId) {
+          $.ajax({
+            url: 'rest/items/'+id,
+            type: "GET",
+            beforeSend: function(xhr){
+              xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+            },
+            success: function(data) {
+              $('#bid').css("display","none");
+                var userItem = false;
+                if(data.owner_id == testId)
+                {
+                  $('#bid').css("display","none");
+                  userItem=true;
+                }
+                  
+                $('#dataTitle').html(data.title);
+                $('#modalDate').attr("dateTime", data.ending);
+                $('#modalText').attr("value", data.id);
+                modalEnding(userItem);
+                setInterval(function () {
+                  modalEnding(userItem);
+                }, 1000);    
+                $('#dataImage').css("background-image","url('img/items/"+data.image+"')");
+                $('#dataDescription').html(data.description);
+                $('#exampleModalCenter').modal("show");
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+              toastr.error(XMLHttpRequest.responseJSON.message);
+              $('.note-button').attr('disabled', false);
+            }});
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          toastr.error(XMLHttpRequest.responseJSON.message);
+          $('.note-button').attr('disabled', false);
+      }});
+
     },
 
     addBid : function(data){
@@ -282,6 +329,8 @@ var MainService = {
         contentType: "application/json",
         dataType: "json",
         success: function(result) {
+            alert(result);
+            console.log(result);
             //toastr.success("Note shared!");
         }
       });

@@ -20,6 +20,12 @@ class BidService extends BaseService{
 
   public function add($user, $entity){
     $entity['bidder_id'] = $user['id'];
+    //$this->dao->check_if_owner($user['id']));
+    $check = $this->dao->check_if_owner($user['id']);
+    if (!empty($check))
+    {
+      throw new Exception("This is hack you will be traced, be prepared :)");
+    }
     return parent::add($user, $entity);
   }
 }

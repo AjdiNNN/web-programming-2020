@@ -65,6 +65,10 @@ var userService = {
       },
     });
   },
+  get: function(id)
+  {
+
+  },
   auth: function(userData) {
     $.ajax({
       url: 'rest/login',
