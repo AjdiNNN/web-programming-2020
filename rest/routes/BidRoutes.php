@@ -5,4 +5,9 @@ Flight::route('GET /bids/@id', function($id){
 Flight::route('POST /bid', function(){
   Flight::json(Flight::bidService()->add(Flight::get('user'),Flight::request()->data->getData()));
 });
+Flight::route('DELETE /bids/@id', function($id){
+  
+  Flight::json(["message" => Flight::bidService()->delete(Flight::get('user'), $id)]);
+});
+
 ?>

@@ -1,6 +1,11 @@
 var itemService = {
     init: function(){
       itemService.list();
+      var minDate = new Date(new Date().getTime()+3600000);
+      var tzoffset = (minDate).getTimezoneOffset() * 60000;
+      minDate = new Date((new Date().getTime()+1000000)-tzoffset);
+      $('#start').attr("min",new Date(minDate).toISOString().slice(0,16));
+      $('#start').val((minDate.toISOString().slice(0,16)));
       $('#itemadd').validate({ 
         rules:{
           title: {
@@ -140,6 +145,7 @@ var itemService = {
           $('#dataImage').css("background-image","url('img/items/"+data.image+"')");
           $('#dataDescription').html(data.description);
           $('#exampleModalCenter').modal("show");
+          $("#delete").attr('onClick', 'itemService.delete('+id+')');
          },
          error: function(XMLHttpRequest, textStatus, errorThrown) {
            toastr.error(XMLHttpRequest.responseJSON.message);
@@ -168,45 +174,30 @@ var itemService = {
       $("#addItemModal").modal("show");
     },
 
-    update: function(id, entity){
-      $.ajax({
-        url: 'rest/notes/'+id,
-        type: 'PUT',
-        beforeSend: function(xhr){
-          xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-        },
-        data: JSON.stringify(entity),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(result) {
-            $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-            MainService.list(); // perf optimization
-            $("#addNoteModal").modal("hide");
-            toastr.success("Note updated!");
-        }
-      });
-    },
-
     delete: function(id){
-      $('.note-button').attr('disabled', true);
       $.ajax({
-        url: 'rest/notes/'+id,
+        url: 'rest/bids/'+id,
         beforeSend: function(xhr){
           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
         },
         type: 'DELETE',
         success: function(result) {
-            $("#note-list").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-            MainService.list();
-            toastr.success("Note deleted!");
+          $.ajax({
+            url: 'rest/item/'+id,
+            beforeSend: function(xhr){
+              xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+            },
+            type: 'DELETE',
+            success: function(result) {
+                $('#exampleModalCenter').modal('hide');
+                itemService.list();
+                toastr.success("Item deleted!");
+            }
+          });
         }
       });
+      
     },
-
-    share_note : function(){
-
-    }
-
 
 };
 var itemNo = 0;

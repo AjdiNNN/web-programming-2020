@@ -145,8 +145,8 @@ Flight::route('PUT /notes/@id', function($id){
 *     )
 * )
 */
-Flight::route('DELETE /notes/@id', function($id){
-  Flight::noteService()->delete(Flight::get('user'), $id);
+Flight::route('DELETE /item/@id', function($id){
+  Flight::itemService()->delete(Flight::get('user'), $id);
   Flight::json(["message" => "deleted"]);
 });
 

@@ -34,14 +34,15 @@
     <div class="collapse navbar-collapse" id="navbarButtonsExample">
       <!-- Left links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="index.html">Dashboard</a>
+        <li class="nav-item ml-2">
+          <a class="nav-link text-dark" href="index.html"> <span class="icon-bank"></span>Dashboard</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="#">My items</a>
+        <li class="nav-item ml-2">
+          <a class="nav-link text-dark" href="#"><span class="icon-navicon"></span>My items</a>
         </li>
         <li>
-          <button type="button" class="btn btn-primary me-3" onclick="itemService.add()">
+          <button type="button" class="btn btn-primary me-3 ml-2" onclick="itemService.add()">
+            <span class="icon-add"></span>
             Add Item
           </button>
         </li>
@@ -49,9 +50,10 @@
       <!-- Left links -->
 
       <div class="d-flex align-items-center">
-        <button type="button" class="btn btn-secondary me-3" onclick="userService.logout()">
+        <a class="nav-link text-dark" href="#" onclick="userService.logout()">
+          <span class="icon-undo2"></span>
           LOGOUT
-        </button>
+        </a>
       </div>
     </div>
     <!-- Collapsible wrapper -->
@@ -109,7 +111,9 @@
                 <div class="sr-only" id="modalText" value="-1">
                   <div class="spinner-border" role="status"></div>
                 </div>
+                
             </div>
+            <button class="btn btn-danger btn-sm float-end mt-5" id="delete"><span class="icon-delete_forever mb-3"></span>Delete item</button>
           </div>
         </div>
 
@@ -143,7 +147,7 @@
           </div>
           <div class="form-group">
             <label for="image" class="col-form-label">Ending date:</label>
-            <input  class="form-control" type="datetime-local" id="start" name="ending" name="date" value="">
+            <input  class="form-control" type="datetime-local" id="start" name="ending" name="date" value="2017-06-30T16:30">
           </div>
       </div>
       <div class="modal-footer">

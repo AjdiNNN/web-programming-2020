@@ -17,6 +17,13 @@ class BidService extends BaseService{
     return $this->dao->get_item_bids($item_id);
   }
 
+  public function delete($user, $id){
+    $item = $this->dao->get_item_bids($id);
+    foreach ($item as &$i) {
+      parent::delete($user, $i['id']);
+    }
+    
+  }
 
   public function add($user, $entity){
     $entity['bidder_id'] = $user['id'];

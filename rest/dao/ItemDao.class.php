@@ -13,7 +13,9 @@ class ItemDao extends BaseDao{
   public function get_user_items($user_id){
     return $this->query("SELECT * FROM items WHERE owner_id = :owner_id ORDER BY `ending` < NOW(), `ending` ASC", ['owner_id' => $user_id]);
   }
-
+  public function get_by_id($id){
+    return $this->query_unique('SELECT * FROM items WHERE id = :id', ['id' => $id]);
+  }
   public function get_all_sorted(){
     return$this->query("SELECT * 
     FROM `items` 

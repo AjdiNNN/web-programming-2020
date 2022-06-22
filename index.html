@@ -16,43 +16,43 @@
 <body class="bg-primary">
   <header>
     
-   <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-secondary bg-light">
-  <!-- Container wrapper -->
-  <div class="container">
-    <!-- Navbar brand -->
-    <a class="navbar-brand me-2" href="#">
-      <img
-        src="img/logo.gif"
-        height="50"
-        alt="Logo"
-        loading="lazy"
-        style="margin-top: -5px;"
-      />
-    </a>
-    <!-- Collapsible wrapper -->
-    <div class="collapse navbar-collapse" id="navbarButtonsExample">
-      <!-- Left links -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="#">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="items.html">My items</a>
-        </li>
-      </ul>
-      <!-- Left links -->
-
-      <div class="d-flex align-items-center">
-        <button type="button" class="btn btn-secondary me-3" onclick="userService.logout()">
-          LOGOUT
-        </button>
+    <nav class="navbar navbar-expand-lg navbar-secondary bg-light">
+      <!-- Container wrapper -->
+      <div class="container">
+        <!-- Navbar brand -->
+        <a class="navbar-brand me-2" href="#">
+          <img
+            src="img/logo.gif"
+            height="50"
+            alt="Logo"
+            loading="lazy"
+            style="margin-top: -5px;"
+          />
+        </a>
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarButtonsExample">
+          <!-- Left links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item ml-2">
+              <a class="nav-link text-dark" href="#"> <span class="icon-bank"></span>Dashboard</a>
+            </li>
+            <li class="nav-item ml-2">
+              <a class="nav-link text-dark" href="items.html"><span class="icon-navicon"></span>My items</a>
+            </li>
+          </ul>
+          <!-- Left links -->
+    
+          <div class="d-flex align-items-center">
+            <a class="nav-link text-dark" href="#" onclick="userService.logout()">
+              <span class="icon-undo2"></span>
+              LOGOUT
+            </a>
+          </div>
+        </div>
+        <!-- Collapsible wrapper -->
       </div>
-    </div>
-    <!-- Collapsible wrapper -->
-  </div>
-  <!-- Container wrapper -->
-</nav>
+      <!-- Container wrapper -->
+    </nav>
 <!-- Navbar -->
   </header>
 

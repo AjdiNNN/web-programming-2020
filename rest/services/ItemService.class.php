@@ -9,7 +9,7 @@ class ItemService extends BaseService{
 
   public function __construct(){
     parent::__construct(new ItemDao());
-    
+    $this->bid_dao = new BidDao();
     $this->user_dao = new UserDao();
   }
 
@@ -26,22 +26,13 @@ class ItemService extends BaseService{
     return parent::add($user, $entity);
   }
 
-  public function update($user, $id, $entity){
-    $note = $this->dao->get_by_id($id);
-    if ($note['user_id'] != $user['id']){
-      throw new Exception("This is hack you will be traced, be prepared :)");
-    }
-    unset($entity['user_id']);
-    unset($entity['status']);
-    return parent::update($user, $id, $entity);
-  }
 
   public function delete($user, $id){
-    $note = $this->dao->get_by_id($id);
-    if ($note['user_id'] != $user['id']){
+    $item = $this->dao->get_by_id($id);
+    if ($item['owner_id'] != $user['id']){
       throw new Exception("This is hack you will be traced, be prepared :)");
     }
-    parent::update($user, $id, ['status' => 'ARCHIVED']);
+    parent::delete($user, $id);
   }
 }
 ?>
