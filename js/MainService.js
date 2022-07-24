@@ -149,7 +149,7 @@ function modalEnding(useritem){
   },
   error: function(XMLHttpRequest, textStatus, errorThrown) {
       toastr.error(XMLHttpRequest.responseJSON.message);
-      //userService.logout();
+      userService.logout();
   }
 });
 }
@@ -265,7 +265,7 @@ var MainService = {
         },
          error: function(XMLHttpRequest, textStatus, errorThrown) {
            toastr.error(XMLHttpRequest.responseJSON.message);
-           //userService.logout();
+           userService.logout();
          }
       });
     },
@@ -306,12 +306,12 @@ var MainService = {
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               toastr.error(XMLHttpRequest.responseJSON.message);
-              $('.note-button').attr('disabled', false);
+              userService.logout();
             }});
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           toastr.error(XMLHttpRequest.responseJSON.message);
-          $('.note-button').attr('disabled', false);
+          userService.logout();
       }});
 
     },
@@ -319,6 +319,7 @@ var MainService = {
     addBid : function(data){
       var itemid = $('#modalText').attr("value");
       data['item_id'] = itemid;
+      console.log(data);
       $.ajax({
         url: 'rest/bid',
         type: 'POST',

@@ -41,7 +41,6 @@ var itemService = {
         },
 
         submitHandler: function(form) {
-          
           var item =new FormData(form);
           itemService.addItem(item);
         },
@@ -149,7 +148,7 @@ var itemService = {
          },
          error: function(XMLHttpRequest, textStatus, errorThrown) {
            toastr.error(XMLHttpRequest.responseJSON.message);
-           $('.note-button').attr('disabled', false);
+           userService.logout();
          }});
     },
     addItem: function(note){
@@ -160,10 +159,13 @@ var itemService = {
           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
         },
         data: note,
-        success: function () {
+        success: function (data) {
           itemService.list();
           $('#addItemModal').modal("hide");
-          toastr.success("Item added");
+          if(data.message)
+            toastr.error(data.message);
+          else
+            toastr.success("Item added!")
         },
         cache: false,
         processData: false,
@@ -176,27 +178,17 @@ var itemService = {
 
     delete: function(id){
       $.ajax({
-        url: 'rest/bids/'+id,
+        url: 'rest/item/'+id,
         beforeSend: function(xhr){
           xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
         },
         type: 'DELETE',
         success: function(result) {
-          $.ajax({
-            url: 'rest/item/'+id,
-            beforeSend: function(xhr){
-              xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
-            },
-            type: 'DELETE',
-            success: function(result) {
-                $('#exampleModalCenter').modal('hide');
-                itemService.list();
-                toastr.success("Item deleted!");
-            }
-          });
+            $('#exampleModalCenter').modal('hide');
+            itemService.list();
+            toastr.success("Item deleted!");
         }
       });
-      
     },
 
 };
@@ -224,7 +216,7 @@ function checkItems()
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
               toastr.error(XMLHttpRequest.responseJSON.message);
-              //userService.logout();
+              userService.logout();
           }
         });
         var currentDate = new Date().getTime();
@@ -289,7 +281,7 @@ function modalEnding(){
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
         toastr.error(XMLHttpRequest.responseJSON.message);
-        //userService.logout();
+        userService.logout();
     }
   });
   var currentDate = new Date().getTime();

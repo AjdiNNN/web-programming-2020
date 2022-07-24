@@ -53,7 +53,7 @@ Flight::route('/*', function(){
 
 /* REST API documentation endpoint */
 Flight::route('GET /docs.json', function(){
-  $openapi = \OpenApi\scan('routes');
+  $openapi = \OpenApi\Generator::scan(['routes']);
   header('Content-Type: application/json');
   echo $openapi->toJson();
 });
