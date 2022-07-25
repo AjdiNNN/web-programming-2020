@@ -12,7 +12,8 @@ Flight::route('GET /bids/@id', function($id){
 * @OA\Post(
 *     path="/bid",
 *     description="Register to the system",
-*     tags={"user"},
+*     tags={"bids"},
+*     security={{"ApiKeyAuth": {}}},
 *     @OA\RequestBody(description="Basic user info", required=true,
 *       @OA\MediaType(mediaType="application/json",
 *    			@OA\Schema(
@@ -22,11 +23,11 @@ Flight::route('GET /bids/@id', function($id){
 *     )),
 *     @OA\Response(
 *         response=200,
-*         description="Success user registered"
+*         description="Success bid accepted"
 *     ),
 *     @OA\Response(
-*         response=403,
-*         description="Username or email is already registered"
+*         response=500,
+*         description="Bidding on own item or invalid item"
 *     )
 * )
 */

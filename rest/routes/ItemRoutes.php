@@ -32,6 +32,7 @@ Flight::route('GET /useritems', function(){
 *     path="/item",
 *     description="Add item to auction",
 *     tags={"items"},
+*     security={{"ApiKeyAuth": {}}},
 *     summary="Adds item to auction. ",
 *     @OA\RequestBody(
 *         @OA\MediaType(

@@ -58,15 +58,25 @@ Flight::route('POST /login', function(){
 *         description="Success user registered"
 *     ),
 *     @OA\Response(
-*         response=403,
+*         response=500,
 *         description="Username or email is already registered"
 *     )
 * )
 */
 Flight::route('POST /register', function(){
   $data = Flight::request()->data->getData();
-  Flight::userDao()->addUser($data);
-  Flight::json(["message" => "Success"]);
+  if(Flight::userDao()->get_user_by_username($data['username']))
+  {
+    throw new Exception("Username already registered");
+  }
+  else if(Flight::userDao()->get_user_by_email($data['email']))
+  {
+    throw new Exception("Email already registered");
+  }
+  else{
+    Flight::userDao()->addUser($data);
+    Flight::json(["message" => "Success"]);
+  }
 });
 /**
  * @OA\Get(path="/user", tags={"user"}, security={{"ApiKeyAuth": {}}},
