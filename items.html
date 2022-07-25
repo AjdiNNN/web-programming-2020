@@ -16,7 +16,6 @@
 <body class="bg-primary">
   <header>
     
-   <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-secondary bg-light">
   <!-- Container wrapper -->
   <div class="container">
@@ -30,15 +29,14 @@
         style="margin-top: -5px;"
       />
     </a>
-    <!-- Collapsible wrapper -->
-    <div class="collapse navbar-collapse" id="navbarButtonsExample">
+
       <!-- Left links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item ml-2">
-          <a class="nav-link text-dark" href="index.html"> <span class="icon-bank"></span>Dashboard</a>
+        <li class="nav-item px-2">
+          <a class="nav-link text-dark" href="index.html"> <span class="icon-bank"></span>  Dashboard</a>
         </li>
-        <li class="nav-item ml-2">
-          <a class="nav-link text-dark" href="#"><span class="icon-navicon"></span>My items</a>
+        <li class="nav-item px-2">
+          <a class="nav-link text-dark" href="#"><span class="icon-navicon"></span>  My items</a>
         </li>
         <li>
           <button type="button" class="btn btn-primary me-3 ml-2" onclick="itemService.add()">
@@ -55,12 +53,48 @@
           LOGOUT
         </a>
       </div>
-    </div>
-    <!-- Collapsible wrapper -->
   </div>
   <!-- Container wrapper -->
 </nav>
-<!-- Navbar -->
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+  <a class="navbar-brand me-2" href="#">
+    <img
+      src="img/logo.gif"
+      height="50"
+      alt="Logo"
+      loading="lazy"
+      style="margin-top: -5px;"
+    />
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link text-dark" href="index.html"> <span class="icon-bank"></span>Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark" href="#"><span class="icon-navicon"></span>My items</a>
+      </li>
+      <li class="nav-item">
+        <button type="button" class="btn btn-primary me-3 ml-2" onclick="itemService.add()">
+          <span class="icon-add"></span>
+          Add Item
+        </button>
+      </li>
+    </ul>
+    <div class="d-flex align-items-center">
+      <a class="nav-link text-dark" href="#" onclick="userService.logout()">
+        <span class="icon-undo2"></span>
+        LOGOUT
+      </a>
+    </div>
+  </div>
+  </div>
+</div>
+</nav> -->
   </header>
 
   <main>
@@ -83,7 +117,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="js/useritems.js"></script>
 <script src="js/user-service.js"></script>
-
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 
 
