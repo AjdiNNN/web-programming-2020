@@ -5,12 +5,9 @@ require_once __DIR__.'/../dao/UserDao.class.php';
 
 class ItemService extends BaseService{
 
-  private $user_dao;
 
   public function __construct(){
     parent::__construct(new ItemDao());
-    $this->bid_dao = new BidDao();
-    $this->user_dao = new UserDao();
   }
 
   public function get_user_items($user){
@@ -33,6 +30,11 @@ class ItemService extends BaseService{
       throw new Exception("This is hack you will be traced, be prepared :)");
     }
     parent::delete($user, $id);
+  }
+
+  public function check_if_ended($id)
+  {
+    return $this->dao->check_if_ended($id);
   }
 }
 ?>

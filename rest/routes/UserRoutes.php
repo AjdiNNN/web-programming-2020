@@ -67,15 +67,14 @@ Flight::route('POST /register', function(){
   $data = Flight::request()->data->getData();
   if(Flight::userDao()->get_user_by_username($data['username']))
   {
-    throw new Exception("Username already registered");
+    Flight::json(["message" => "Username already registered"], 500);
   }
   else if(Flight::userDao()->get_user_by_email($data['email']))
   {
-    throw new Exception("Email already registered");
+    Flight::json(["message" => "Email already registered"], 500);
   }
   else{
-    Flight::userDao()->addUser($data);
-    Flight::json(["message" => "Success"]);
+    Flight::json(Flight::userDao()->addUser($data));
   }
 });
 /**

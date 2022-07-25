@@ -121,7 +121,7 @@ var itemService = {
         },
          error: function(XMLHttpRequest, textStatus, errorThrown) {
            toastr.error(XMLHttpRequest.responseJSON.message);
-           //userService.logout();
+           userService.logout();
          }
       });
     },
@@ -162,15 +162,14 @@ var itemService = {
         success: function (data) {
           itemService.list();
           $('#addItemModal').modal("hide");
-          if(data.message)
-            toastr.error(data.message);
-          else
-            toastr.success("Item added!")
+          toastr.success("Item added!")
         },
         cache: false,
         processData: false,
         contentType: false,
-      });
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          toastr.error(XMLHttpRequest.responseJSON.message);
+        }});
     },
     add: function(){
       $("#addItemModal").modal("show");

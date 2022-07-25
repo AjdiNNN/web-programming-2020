@@ -1,6 +1,6 @@
 <?php
 /**
- * @OA\Get(path="/bids/{id}", tags={"bids"}, security={{"ApiKeyAuth": {}}},
+ * @OA\Get(path="/bids/{id}", tags={"bids"}, security={{"ApiKeyAuth": {}}}, summary="Return all bids for item from the API.",
  *     @OA\Parameter(in="path", name="id", example=1, description="Id of item"),
  *     @OA\Response(response="200", description="Fetch bids for item of that id")
  * )
@@ -11,7 +11,7 @@ Flight::route('GET /bids/@id', function($id){
 /**
 * @OA\Post(
 *     path="/bid",
-*     description="Register to the system",
+*     summary="Add bid to an item",
 *     tags={"bids"},
 *     security={{"ApiKeyAuth": {}}},
 *     @OA\RequestBody(description="Basic user info", required=true,
@@ -26,13 +26,35 @@ Flight::route('GET /bids/@id', function($id){
 *         description="Success bid accepted"
 *     ),
 *     @OA\Response(
+*         response=403,
+*         description="Bid too low or item non existing"
+*     ),
+*     @OA\Response(
+*         response=404,
+*         description="Auction ended"
+*     ),
+*     @OA\Response(
 *         response=500,
-*         description="Bidding on own item or invalid item"
+*         description="Bidding on own item"
 *     )
 * )
 */
 Flight::route('POST /bid', function(){
-  Flight::json(Flight::bidService()->add(Flight::get('user'),Flight::request()->data->getData()));
+  $request = Flight::request()->data->getData();
+  $itemCheck = Flight::itemService()->check_if_ended($request['item_id']);
+  
+  if(empty($itemCheck))
+  {
+    Flight::json(["message"=>"Auction ended"],403);
+  }
+  else 
+  {
+    $highestBid = Flight::bidService()->get_item_bids($request['item_id'])[0]['amount'];
+    if($request['amount']<=$highestBid)
+      Flight::json(["message"=>"Bid too low or item id not found"],404);
+    else
+      Flight::json(Flight::bidService()->add(Flight::get('user'),Flight::request()->data->getData()));
+  }
 });
 
 ?>

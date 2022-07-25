@@ -58,16 +58,22 @@ var userService = {
             required: true
         }
       },
-      submitHandler: function(form) {
-        
-        var user = Object.fromEntries((new FormData(form)).entries());
-        userService.auth(user);
-      },
+      errorElement: "div",
+          errorPlacement: function ( error, element ) {
+              error.addClass( "invalid-feedback" );
+              error.insertAfter( element );
+          },
+          highlight: function(element) {
+              $(element).removeClass('is-valid').addClass('is-invalid');
+          },
+          unhighlight: function(element) {
+              $(element).removeClass('is-invalid').addClass('is-valid');
+          },
+          submitHandler: function(form) {
+            var user = Object.fromEntries((new FormData(form)).entries());
+            userService.auth(user);
+          }
     });
-  },
-  get: function(id)
-  {
-
   },
   auth: function(userData) {
     $.ajax({
@@ -94,8 +100,11 @@ var userService = {
         contentType: "application/json",
         dataType: "json",
         success: function(result) {
-            toastr.success("Registered");
+            toastr.success("Registered!");
             $("#register").modal("hide");
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          toastr.error(XMLHttpRequest.responseJSON.message);
         }
     });
     

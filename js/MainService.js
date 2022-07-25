@@ -23,7 +23,7 @@ function checkEndings()
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
               toastr.error(XMLHttpRequest.responseJSON.message);
-              //userService.logout();
+              userService.logout();
           }
         });
         var currentDate = new Date().getTime();
@@ -319,7 +319,6 @@ var MainService = {
     addBid : function(data){
       var itemid = $('#modalText').attr("value");
       data['item_id'] = itemid;
-      console.log(data);
       $.ajax({
         url: 'rest/bid',
         type: 'POST',
@@ -329,7 +328,7 @@ var MainService = {
         data: JSON.stringify(data),
         contentType: "application/json",
         dataType: "json",
-        success: function(result) {
+        success: function() {
           toastr.success("Bid succesful");
         }
       });

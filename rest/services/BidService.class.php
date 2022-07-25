@@ -5,12 +5,11 @@ require_once __DIR__.'/../dao/UserDao.class.php';
 
 class BidService extends BaseService{
 
-  private $user_dao;
+  private $item_dao;
 
   public function __construct(){
     parent::__construct(new BidDao());
-    
-    $this->user_dao = new UserDao();
+    $this->item_dao = new ItemDao();
   }
 
   public function get_item_bids($item_id){
@@ -27,7 +26,7 @@ class BidService extends BaseService{
 
   public function add($user, $entity){
     $entity['bidder_id'] = $user['id'];
-    $check = $this->dao->check_if_owner($user['id']);
+    $check = $this->item_dao->check_if_owner($user['id'], $entity['item_id']);
     if (!empty($check))
     {
       throw new Exception("This is hack you will be traced, be prepared :)");

@@ -10,7 +10,7 @@ Flight::route('GET /items', function(){
 });
 
 /**
- * @OA\Get(path="/items/{id}", tags={"items"}, security={{"ApiKeyAuth": {}}},
+ * @OA\Get(path="/items/{id}", tags={"items"}, security={{"ApiKeyAuth": {}}}, summary="Return item from the API. ",
  *     @OA\Parameter(in="path", name="id", example=1, description="Id of item"),
  *     @OA\Response(response="200", description="Fetch individual item")
  * )
@@ -76,14 +76,14 @@ Flight::route('POST /item', function(){
   
   // Check file size
   if ($file["size"] > 500000) {
-    Flight::json(["message" => "Your image file is too large"]);
+    Flight::json(["message" => "Your image file is too large"], 500);
     $uploadOk = 0;
   }
   
   // Allow certain file formats
   if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
   && $imageFileType != "gif" ) {
-    Flight::json(["message" => "Image format not allowed"]);
+    Flight::json(["message" => "Image format not allowed"], 500);
     $uploadOk = 0;
   }
   
@@ -96,7 +96,7 @@ Flight::route('POST /item', function(){
     if (move_uploaded_file($file["tmp_name"], $target_dir.$imagePath ) ) {
 
     } else {
-      Flight::json(["message" => "Sorry, there was an error uploading your file."]);
+      Flight::json(["message" => "Sorry, there was an error uploading your file."], 500);
       return;
     }
   }
@@ -115,8 +115,8 @@ function generateRandomString($length = 10) {
 }
 /**
 * @OA\Delete(
-*     path="/item/{id}", security={{"ApiKeyAuth": {}}},
-*     description="Soft delete item",
+*     path="/item/{id}", security={{"ApiKeyAuth": {}}},summary="Delete item from the API. ",
+*     description="Delete item and its bids from API",
 *     tags={"items"},
 *     @OA\Parameter(in="path", name="id", example=1, description="Item ID"),
 *     @OA\Response(
