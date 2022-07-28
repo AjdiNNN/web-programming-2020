@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2022 at 03:34 AM
+-- Generation Time: Jul 29, 2022 at 01:44 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -39,9 +39,8 @@ CREATE TABLE `bids` (
 --
 
 INSERT INTO `bids` (`id`, `amount`, `bidder_id`, `item_id`) VALUES
-(15, 55, 3, 8),
-(16, 88, 3, 8),
-(17, 89, 3, 8);
+(38, 1, 14, 17),
+(39, 2, 14, 17);
 
 -- --------------------------------------------------------
 
@@ -63,8 +62,8 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `title`, `description`, `image`, `ending`, `owner_id`) VALUES
-(8, 'lorem ipsum', 'lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum', 'yQWdheNESv7uSse0OpE.jpg', '2022-06-25 01:23:00.00', 1),
-(9, 'asd', 'asdasdasdddddddddddddddddddddddd', 'fuAFqJDSZANZvzZTWGH.jpg', '2022-06-21 02:10:00.00', 1);
+(17, 'IBU', 'International Burch University - Intro to Web Programming 2022', 'mjv3YZXg7FsSjQ49BIc.png', '2022-07-30 01:45:00.00', 5),
+(18, 'Lorem ipsum', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sed justo libero. Nulla massa massa, facilisis non dictum quis, dictum in odio. Nunc tincidunt fringilla lectus nec consectetur. Etiam vitae eleifend velit, fringilla suscipit nibh massa nunc.', 'wQdbNJe7g7EyQD0q7hy.jpg', '2022-07-29 10:10:00.00', 14);
 
 -- --------------------------------------------------------
 
@@ -86,8 +85,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `firstname`, `secondname`, `username`, `password`) VALUES
-(1, 'a@a.com', 'Ajdin', 'Hukic', 'ajdin', '$argon2i$v=19$m=16,t=2,p=1$cXFMYTMyNWdlUDl2bkE4aQ$usEeIXqezTAsgiEECayJHg'),
-(3, 'asd@asd.com', 'asd', 'asd@asdads', 'asdd', '$argon2i$v=19$m=65536,t=4,p=1$NmlaOVguRG9MdS9KT3FJNg$oeO93wEnVJTJztB00UbacgxFSacsNkfrpkDgXhLtIwM');
+(5, 'a@a.com', 'ajdin', 'hukic', 'ajdin', '$argon2i$v=19$m=65536,t=4,p=1$NmJuLlFDbDBFdlYyaHlOTg$gshH63RiSQSaHI00hiW4nScu80SnpWkBUARyI+u0V58'),
+(14, 'b@b.com', 'ajdin', 'hukic', 'ajdiNN', '$argon2i$v=19$m=65536,t=4,p=1$NmJuLlFDbDBFdlYyaHlOTg$gshH63RiSQSaHI00hiW4nScu80SnpWkBUARyI+u0V58');
 
 --
 -- Indexes for dumped tables
@@ -122,19 +121,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bids`
 --
 ALTER TABLE `bids`
-  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(128) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
