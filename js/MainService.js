@@ -3,6 +3,7 @@ var msDay = 60*60*24*1000;
 var msHours = 60*60*1000;
 var msMinute = 60*1000;
 var currentMinbid = 1;
+var intervalEnding = 0;
 function checkEndings()
 {
     for(let i = 0; i <itemNo; i++)
@@ -129,6 +130,7 @@ function modalEnding(useritem){
       else{   
         if(!useritem){
           currentMinbid = data[0].amount+1;
+          
           $('#modalText').html("Bid "+(data[0].amount+1)+"BAM or more");
         }
         else
@@ -155,6 +157,7 @@ function modalEnding(useritem){
 }
 var MainService = {
     init: function(){
+
       MainService.list();
       setInterval(function () {
         checkEndings();
@@ -163,6 +166,7 @@ var MainService = {
       $('#exampleModalCenter').on('hidden.bs.modal', function(e) {
         $('#modalText').css("color","black")
       });
+
       $('#bidform').validate({ 
         rules:{
           amount: {
@@ -271,6 +275,8 @@ var MainService = {
     },
 
     get: function(id){
+      clearInterval(intervalEnding);
+
       $.ajax({
         url: 'rest/user',
         type: "GET",
@@ -297,8 +303,8 @@ var MainService = {
                 $('#modalDate').attr("dateTime", data.ending);
                 $('#modalText').attr("value", data.id);
                 modalEnding(userItem);
-                setInterval(function () {
-                  modalEnding(userItem);
+                intervalEnding = setInterval(function () {
+                   modalEnding(userItem);
                 }, 1000);    
                 $('#dataImage').css("background-image","url('img/items/"+data.image+"')");
                 $('#dataDescription').html(data.description);
@@ -328,9 +334,11 @@ var MainService = {
         data: JSON.stringify(data),
         contentType: "application/json",
         dataType: "json",
-        success: function() {
+        success: function(data) {
           toastr.success("Bid succesful");
-        }
-      });
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          toastr.error(XMLHttpRequest.responseJSON.message);
+      }});
     }
 };

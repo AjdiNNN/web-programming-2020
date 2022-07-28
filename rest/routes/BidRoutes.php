@@ -42,18 +42,24 @@ Flight::route('GET /bids/@id', function($id){
 Flight::route('POST /bid', function(){
   $request = Flight::request()->data->getData();
   $itemCheck = Flight::itemService()->check_if_ended($request['item_id']);
-  
   if(empty($itemCheck))
   {
     Flight::json(["message"=>"Auction ended"],403);
   }
   else 
   {
-    $highestBid = Flight::bidService()->get_item_bids($request['item_id'])[0]['amount'];
-    if($request['amount']<=$highestBid)
-      Flight::json(["message"=>"Bid too low or item id not found"],404);
+    $highestBid = Flight::bidService()->get_item_bids($request['item_id']);
+    if(!empty($highestBid))
+    {
+      if($request['amount']<=$highestBid[0]['amount'])
+        Flight::json(["message"=>"Bid too low or item id not found"],404);
+      else
+        Flight::json(Flight::bidService()->add(Flight::get('user'),Flight::request()->data->getData()));
+    }
     else
-      Flight::json(Flight::bidService()->add(Flight::get('user'),Flight::request()->data->getData()));
+    {
+        Flight::json(Flight::bidService()->add(Flight::get('user'),Flight::request()->data->getData()));
+    }
   }
 });
 
